@@ -16,12 +16,12 @@ function getRandomItems(arr, count) {
 function Game() {
   const navigate    = useNavigate();
   const [level, setLevel]     = useState(1);
-  const [seconds, setSeconds] = useState(0);
+  const [totalSeconds, setTotalSeconds] = useState(0);
   const [running, setRunning] = useState(true);
-  const [totalMs, setTotalMs] = useState(0);   // accumulated time from prev levels
   const [showBeat, setShowBeat] = useState(false);
   const intervalRef  = useRef(null);
   const resetMazeRef = useRef(null);            // callback set by Maze component
+  const isTransitioning = useRef(false);
 
   // Pick 5 random levels on mount: 2 Easy, 2 Medium, 1 Hard
   const gameLevels = useMemo(() => {
@@ -37,7 +37,7 @@ function Game() {
   // Timer
   useEffect(() => {
     if (running) {
-      intervalRef.current = setInterval(() => setSeconds(s => s + 1), 1000);
+      intervalRef.current = setInterval(() => setTotalSeconds(s => s + 1), 1000);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -52,29 +52,30 @@ function Game() {
 
   // Called when the player reaches the finish cell
   const handleLevelComplete = useCallback(() => {
+    if (isTransitioning.current) return;
+    isTransitioning.current = true;
+
     setRunning(false);
     setShowBeat(true);
 
     setTimeout(() => {
       setShowBeat(false);
-      const newTotal = totalMs + seconds;
-      setTotalMs(newTotal);
-      setSeconds(0);
 
       if (level < TOTAL_LEVELS) {
         setLevel(l => l + 1);
         setRunning(true);
+        isTransitioning.current = false;
       } else {
-        // All 5 levels done → Result page (only pass newTotal as it already includes seconds)
-        navigate('/result', { state: { totalSeconds: newTotal } });
+        // All levels done → Result page
+        navigate('/result', { state: { totalSeconds } });
       }
     }, 1200);
-  }, [level, seconds, totalMs, navigate]);
+  }, [level, totalSeconds, navigate]);
 
   const handleRestart = () => {
-    setSeconds(0);
+    // Reset player position to start, but keep timer running for penalty
     setRunning(true);
-    resetMazeRef.current?.(); // reset player position to start
+    resetMazeRef.current?.();
   };
 
   const handleExit = () => {
@@ -102,7 +103,7 @@ function Game() {
 
         <div className="hud-center">
           <span className="hud-label">TIME</span>
-          <span className="hud-value timer-display">{formatTime(seconds)}</span>
+          <span className="hud-value timer-display">{formatTime(totalSeconds)}</span>
         </div>
 
         <div className="hud-item hud-right">

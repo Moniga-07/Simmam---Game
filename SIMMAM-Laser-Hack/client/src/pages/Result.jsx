@@ -63,9 +63,6 @@ function Result() {
         </div>
 
         <div className="result-actions">
-          <NeonButton id="btn-play-again" variant="primary" onClick={() => navigate('/countdown')}>
-            ▶ Play Again
-          </NeonButton>
           <NeonButton id="btn-home" variant="secondary" onClick={() => navigate('/')}>
             🏠 Home
           </NeonButton>

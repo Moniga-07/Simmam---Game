@@ -95,11 +95,12 @@ function Game() {
       )}
 
       {/* HUD */}
-      <header className="game-hud">
-        <div className="hud-item">
-          <span className="hud-label">LEVEL</span>
-          <span className="hud-value level-badge">{level} / {TOTAL_LEVELS}</span>
-        </div>
+      <header className="game-hud" style={{ flexDirection: 'column', alignItems: 'center', paddingBottom: '10px' }}>
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="hud-item">
+            <span className="hud-label">LEVEL</span>
+            <span className="hud-value level-badge">{level} / {TOTAL_LEVELS}</span>
+          </div>
 
         <div className="hud-center">
           <span className="hud-label">TIME</span>
@@ -113,6 +114,7 @@ function Game() {
           <NeonButton id="btn-exit" size="sm" variant="danger" onClick={handleExit}>
             ✕ Exit
           </NeonButton>
+        </div>
         </div>
       </header>
 

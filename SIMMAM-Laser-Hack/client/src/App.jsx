@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
+import Registration from './pages/Registration';
 import Home        from './pages/Home';
 import Instructions from './pages/Instructions';
 import Countdown   from './pages/Countdown';
@@ -12,7 +13,8 @@ function App() {
     <BrowserRouter>
       <div className="scanline" aria-hidden="true" />
       <Routes>
-        <Route path="/"            element={<Home />} />
+        <Route path="/"            element={<Registration />} />
+        <Route path="/home"        element={<Home />} />
         <Route path="/instructions" element={<Instructions />} />
         <Route path="/countdown"   element={<Countdown />} />
         <Route path="/game"        element={<Game />} />

@@ -1,0 +1,123 @@
+.reg-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.reg-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 3rem 2rem;
+  background: rgba(4, 15, 10, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.reg-title {
+  font-size: 2.5rem;
+  margin: 0.5rem 0 0.5rem;
+}
+
+.reg-subtitle {
+  color: var(--neon-cyan);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.reg-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+}
+
+.form-group label {
+  font-family: 'Orbitron', monospace;
+  color: var(--neon-cyan);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  background: rgba(0, 255, 100, 0.05);
+  border: 1px solid rgba(0, 255, 100, 0.3);
+  padding: 12px 15px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.2);
+  background: rgba(0, 255, 100, 0.1);
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Custom select styling */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper::after {
+  content: '▼';
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--neon-cyan);
+  pointer-events: none;
+  font-size: 0.8rem;
+}
+
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: #040f0a;
+  color: #fff;
+  padding: 10px;
+}
+
+.reg-actions {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+#btn-submit-reg {
+  width: 100%;
+}

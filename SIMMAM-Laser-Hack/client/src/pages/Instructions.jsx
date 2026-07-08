@@ -45,7 +45,7 @@ function Instructions() {
         </div>
 
         <div className="instr-actions">
-          <NeonButton id="btn-back-home" variant="secondary" size="sm" onClick={() => navigate('/')}>
+          <NeonButton id="btn-back-home" variant="secondary" size="sm" onClick={() => navigate('/home')}>
             ← Back
           </NeonButton>
           <NeonButton id="btn-ready" variant="primary" onClick={() => navigate('/countdown')}>

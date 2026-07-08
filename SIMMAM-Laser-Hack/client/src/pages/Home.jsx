@@ -12,9 +12,6 @@ function Home() {
       <div className="laser-beam beam-v" aria-hidden="true" />
 
       <div className="home-content">
-        {/* Badge */}
-        <span className="neon-badge">SIMMAM 2025 · HACKATHON</span>
-
         {/* Title */}
         <h1 className="neon-title home-title">
           <span className="title-line1">SIMMAM</span>
@@ -34,11 +31,6 @@ function Home() {
           <div className="stat-item">
             <span className="stat-value">3</span>
             <span className="stat-label">Levels</span>
-          </div>
-          <div className="stat-sep" />
-          <div className="stat-item">
-            <span className="stat-value">∞</span>
-            <span className="stat-label">Attempts</span>
           </div>
           <div className="stat-sep" />
           <div className="stat-item">

@@ -1,0 +1,129 @@
+.countdown-page {
+  gap: 32px;
+  background: radial-gradient(ellipse at center, rgba(0,60,120,0.2) 0%, transparent 70%);
+}
+
+/* Outer ring */
+.countdown-ring {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,245,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: ring-rotate 4s linear infinite;
+  box-shadow: 0 0 30px rgba(0,245,255,0.1), inset 0 0 30px rgba(0,245,255,0.05);
+}
+
+.countdown-ring::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,245,255,0.1);
+}
+
+.countdown-ring::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  box-shadow: var(--glow-cyan);
+  transform: translateX(-50%);
+}
+
+.countdown-ring.go {
+  border-color: var(--neon-green);
+  box-shadow: var(--glow-green), inset 0 0 40px rgba(0,255,136,0.08);
+  animation: none;
+}
+.countdown-ring.go::after {
+  background: var(--neon-green);
+  box-shadow: var(--glow-green);
+}
+
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Inner circle */
+.countdown-inner {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,245,255,0.15);
+  background: rgba(0, 20, 50, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Counter-rotate to keep number upright */
+  animation: ring-counter 4s linear infinite;
+}
+
+.countdown-ring.go .countdown-inner {
+  animation: none;
+  border-color: rgba(0,255,136,0.2);
+  background: rgba(0, 20, 10, 0.8);
+}
+
+@keyframes ring-counter {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* Number */
+.countdown-number {
+  font-family: 'Orbitron', monospace;
+  font-size: 5.5rem;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: block;
+}
+
+.countdown-number.go-text {
+  font-size: 3rem;
+  letter-spacing: 0.1em;
+  color: var(--neon-green);
+  text-shadow: var(--glow-green);
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* Subtitle */
+.countdown-sub {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Pips */
+.countdown-pips {
+  display: flex;
+  gap: 12px;
+}
+.pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0,245,255,0.15);
+  border: 1px solid rgba(0,245,255,0.3);
+  transition: var(--transition);
+}
+.pip.active {
+  background: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}

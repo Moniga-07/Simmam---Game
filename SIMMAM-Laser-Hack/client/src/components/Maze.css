@@ -1,0 +1,88 @@
+.maze-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  outline: none;
+}
+
+/* PCB glow border around canvas */
+.maze-canvas {
+  display: block;
+  border: 2px solid rgba(0, 200, 80, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(0,200,80,0.1),
+    0 0 20px rgba(0, 200, 80, 0.2),
+    0 0 40px rgba(0, 200, 80, 0.08),
+    inset 0 0 20px rgba(0,0,0,0.5);
+  cursor: default;
+  max-width: 100%;
+  /* Scale down on small screens */
+  image-rendering: crisp-edges;
+}
+
+/* Red flash when hitting a wall */
+.maze-wrapper.flash .maze-canvas {
+  box-shadow:
+    0 0 0 2px rgba(255, 30, 60, 0.6),
+    0 0 24px rgba(255, 30, 60, 0.4),
+    0 0 50px rgba(255, 30, 60, 0.15);
+  border-color: rgba(255,30,60,0.7);
+  transition: box-shadow 0.05s, border-color 0.05s;
+}
+
+/* ── D-Pad (shown on touch screens / mobile, hidden on desktop hover) ── */
+.dpad {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left center right"
+    ". down .";
+  grid-template-columns: 52px 52px 52px;
+  grid-template-rows: 52px 52px 52px;
+  gap: 4px;
+}
+
+.dpad-btn {
+  background: rgba(0, 200, 80, 0.08);
+  border: 1px solid rgba(0, 200, 80, 0.3);
+  color: #00c853;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dpad-btn:active {
+  background: rgba(0, 200, 80, 0.25);
+  box-shadow: 0 0 12px rgba(0,200,80,0.4);
+  border-color: #00c853;
+  color: #fff;
+  transform: scale(0.92);
+}
+
+.dpad-up     { grid-area: up; }
+.dpad-left   { grid-area: left; }
+.dpad-center { grid-area: center; background: transparent; border: none; pointer-events: none; }
+.dpad-right  { grid-area: right; }
+.dpad-down   { grid-area: down; }
+
+/* Hide D-pad on desktop (pointer: fine = mouse), show on touch */
+@media (pointer: fine) {
+  .dpad {
+    display: none;
+  }
+}
+
+/* Scale canvas on small screens */
+@media (max-width: 780px) {
+  .maze-canvas {
+    width: 100%;
+    height: auto;
+  }
+}

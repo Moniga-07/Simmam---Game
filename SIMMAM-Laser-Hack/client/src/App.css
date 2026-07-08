@@ -1,0 +1,166 @@
+/* ── Reusable NeonButton ── */
+.neon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border: 1px solid var(--neon-cyan);
+  background: rgba(0, 245, 255, 0.06);
+  color: var(--neon-cyan);
+  cursor: pointer;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: var(--transition);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.neon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,245,255,0.12), rgba(0,123,255,0.08));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.neon-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: var(--neon-cyan);
+  transition: left 0.4s ease;
+  box-shadow: var(--glow-cyan);
+}
+
+.neon-btn:hover {
+  color: #fff;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan), inset 0 0 20px rgba(0,245,255,0.1);
+  transform: translateY(-2px);
+}
+
+.neon-btn:hover::before { opacity: 1; }
+.neon-btn:hover::after { left: 0; }
+.neon-btn:active { transform: translateY(0); }
+
+.neon-btn.primary {
+  background: rgba(0, 245, 255, 0.12);
+  font-size: 1rem;
+  padding: 16px 48px;
+}
+
+.neon-btn.primary:hover {
+  background: rgba(0, 245, 255, 0.2);
+  box-shadow: var(--glow-cyan), inset 0 0 30px rgba(0,245,255,0.15);
+}
+
+.neon-btn.secondary {
+  border-color: var(--neon-blue);
+  color: #7ab8ff;
+  background: rgba(0,123,255,0.05);
+}
+.neon-btn.secondary::after { background: var(--neon-blue); box-shadow: var(--glow-blue); }
+.neon-btn.secondary:hover {
+  border-color: var(--neon-blue);
+  color: #fff;
+  box-shadow: var(--glow-blue), inset 0 0 20px rgba(0,123,255,0.12);
+}
+
+.neon-btn.danger {
+  border-color: var(--neon-red);
+  color: #ff6b8a;
+  background: rgba(255,0,60,0.05);
+}
+.neon-btn.danger::after { background: var(--neon-red); box-shadow: var(--glow-red); }
+.neon-btn.danger:hover {
+  border-color: var(--neon-red);
+  color: #fff;
+  box-shadow: var(--glow-red), inset 0 0 20px rgba(255,0,60,0.12);
+}
+
+.neon-btn.sm {
+  font-size: 0.72rem;
+  padding: 10px 24px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+/* ── Page wrapper ── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ── Neon card ── */
+.neon-card {
+  background: var(--bg-card);
+  border: var(--border-neon);
+  backdrop-filter: blur(12px);
+  padding: 48px;
+  position: relative;
+  max-width: 680px;
+  width: 100%;
+}
+.neon-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+}
+
+/* ── Corner decorations ── */
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--neon-cyan);
+  border-style: solid;
+}
+.corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* ── Logo / Title ── */
+.neon-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+/* ── Divider ── */
+.neon-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.5), transparent);
+  margin: 24px 0;
+}
+
+/* ── Badge / Tag ── */
+.neon-badge {
+  display: inline-block;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--neon-cyan);
+  border: 1px solid rgba(0,245,255,0.3);
+  padding: 4px 12px;
+  background: rgba(0,245,255,0.05);
+}

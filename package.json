@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Root package for Railway deployment",
   "scripts": {
-    "install": "npm install --include=dev --prefix SIMMAM-Laser-Hack/client && npm install --prefix SIMMAM-Laser-Hack/server",
+    "prebuild": "npm install --prefix SIMMAM-Laser-Hack/client && npm install --prefix SIMMAM-Laser-Hack/server",
     "build": "npm run build --prefix SIMMAM-Laser-Hack/client",
     "start": "npm start --prefix SIMMAM-Laser-Hack/server"
   },

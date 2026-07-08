@@ -1,0 +1,11 @@
+{
+  "name": "simmam-laser-hack-root",
+  "version": "1.0.0",
+  "description": "Root package for Railway deployment",
+  "scripts": {
+    "install": "npm install --prefix SIMMAM-Laser-Hack/client && npm install --prefix SIMMAM-Laser-Hack/server",
+    "build": "npm run build --prefix SIMMAM-Laser-Hack/client",
+    "start": "npm start --prefix SIMMAM-Laser-Hack/server"
+  },
+  "private": true
+}

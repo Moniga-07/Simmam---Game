@@ -52,7 +52,7 @@ function Result() {
       try {
         // 1. Save the current run
         if (totalSeconds > 0) {
-          await fetch('http://localhost:3001/api/leaderboard', {
+          await fetch('/api/leaderboard', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -65,7 +65,7 @@ function Result() {
         }
 
         // 2. Fetch the updated leaderboard
-        const res = await fetch(`http://localhost:3001/api/leaderboard?playerName=${encodeURIComponent(playerData.playerName)}&totalSeconds=${totalSeconds}`);
+        const res = await fetch(`/api/leaderboard?playerName=${encodeURIComponent(playerData.playerName)}&totalSeconds=${totalSeconds}`);
         const data = await res.json();
         
         if (isMounted) {

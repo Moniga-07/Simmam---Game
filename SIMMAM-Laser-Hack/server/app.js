@@ -1,100 +1,111 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
+
+// Supabase Setup
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.warn("⚠️ SUPABASE_URL or SUPABASE_ANON_KEY is missing. Supabase connection will fail.");
+}
+
+const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// DB Setup
-const dbPath = path.resolve(__dirname, 'leaderboard.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error connecting to database:', err);
-  } else {
-    console.log('Connected to SQLite database.');
-    // Initialize table (dropping old one to update schema since we are in dev)
-    db.run(`DROP TABLE IF EXISTS runs`, () => {
-      db.run(`
-        CREATE TABLE runs (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          playerName TEXT NOT NULL,
-          registerNumber TEXT NOT NULL,
-          house TEXT NOT NULL,
-          totalSeconds INTEGER NOT NULL,
-          completedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
-    });
+// Serve static files from the React client build in production
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// GET Top 3 and Rank
+app.get('/api/leaderboard', async (req, res) => {
+  const { playerName, totalSeconds } = req.query;
+
+  try {
+    // Get Top 3 (Ordered by lowest time, then oldest first if ties)
+    const { data: topRows, error: topError } = await supabase
+      .from('runs')
+      .select('player_name, total_seconds')
+      .order('total_seconds', { ascending: true })
+      .order('id', { ascending: true })
+      .limit(3);
+
+    if (topError) throw topError;
+
+    // Convert keys back to camelCase for the frontend if needed
+    const mappedTopRows = topRows.map(row => ({
+      playerName: row.player_name,
+      totalSeconds: row.total_seconds
+    }));
+
+    if (!playerName || !totalSeconds) {
+      return res.json({ top3: mappedTopRows, playerRank: null, totalPlayers: 0 });
+    }
+
+    // Get total players
+    const { count: totalPlayers, error: countError } = await supabase
+      .from('runs')
+      .select('*', { count: 'exact', head: true });
+      
+    if (countError) throw countError;
+
+    // Get rank (Count how many have a strictly smaller totalSeconds)
+    const { count: fasterPlayers, error: fasterError } = await supabase
+      .from('runs')
+      .select('*', { count: 'exact', head: true })
+      .lt('total_seconds', Number(totalSeconds));
+
+    if (fasterError) throw fasterError;
+
+    const playerRank = (fasterPlayers || 0) + 1;
+
+    res.json({ top3: mappedTopRows, playerRank, totalPlayers });
+  } catch (err) {
+    console.error('Error fetching leaderboard:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
-// GET Top 3 and Rank
-app.get('/api/leaderboard', (req, res) => {
-  const { playerName, totalSeconds } = req.query;
-
-  // Get Top 3
-  db.all(
-    `SELECT playerName, totalSeconds 
-     FROM runs 
-     ORDER BY totalSeconds ASC, id ASC
-     LIMIT 3`,
-    [],
-    (err, topRows) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-
-      if (!playerName || !totalSeconds) {
-        return res.json({ top3: topRows, playerRank: null });
-      }
-
-      // If we provided the runId, it would be strictly better, but since it's anonymous to the client, we use totalSeconds and playerName
-      // We can get the rank by counting how many runs were faster (or same time with earlier id/alphabetical name)
-      // To keep it simple, we just count runs with totalSeconds < the requested totalSeconds.
-      db.get(
-        `SELECT COUNT(*) as rank FROM runs WHERE totalSeconds < ?`,
-        [Number(totalSeconds)],
-        (err, countRow) => {
-          if (err) {
-            return res.status(500).json({ error: err.message });
-          }
-          
-          db.get(`SELECT COUNT(*) as total FROM runs`, [], (err, totalRow) => {
-            if (err) {
-              return res.status(500).json({ error: err.message });
-            }
-            const rank = countRow.rank + 1;
-            res.json({ top3: topRows, playerRank: rank, totalPlayers: totalRow.total });
-          });
-        }
-      );
-    }
-  );
-});
-
 // POST new run
-app.post('/api/leaderboard', (req, res) => {
+app.post('/api/leaderboard', async (req, res) => {
   const { playerName, registerNumber, house, totalSeconds } = req.body;
   
   if (!playerName || !registerNumber || !house || typeof totalSeconds !== 'number') {
     return res.status(400).json({ error: 'Missing or invalid fields.' });
   }
 
-  db.run(
-    `INSERT INTO runs (playerName, registerNumber, house, totalSeconds) VALUES (?, ?, ?, ?)`,
-    [playerName, registerNumber, house, totalSeconds],
-    function(err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ success: true, runId: this.lastID });
-    }
-  );
+  try {
+    const { data, error } = await supabase
+      .from('runs')
+      .insert([
+        { 
+          player_name: playerName, 
+          register_number: registerNumber, 
+          house: house, 
+          total_seconds: totalSeconds 
+        }
+      ])
+      .select();
+
+    if (error) throw error;
+    
+    res.json({ success: true, runId: data[0].id });
+  } catch (err) {
+    console.error('Error saving run:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Catch-all route to serve the React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 app.listen(port, () => {

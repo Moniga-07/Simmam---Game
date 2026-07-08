@@ -44,8 +44,8 @@
 /* ── HUD ── */
 .game-hud {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   padding: 12px 28px;
   border-bottom: 1px solid rgba(0,245,255,0.15);
   background: rgba(2, 8, 22, 0.9);
@@ -53,6 +53,14 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 10px;
+}
+
+.hud-top {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .hud-item {
@@ -218,4 +226,45 @@
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.3; }
+}
+
+/* ── Mobile Responsive ── */
+@media (max-width: 600px) {
+  .game-hud {
+    padding: 10px 15px;
+  }
+  .hud-top {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  .hud-item, .hud-center {
+    flex: 1 1 auto;
+    align-items: center;
+    text-align: center;
+  }
+  .hud-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .timer-display {
+    font-size: 1.4rem;
+  }
+  .level-track {
+    gap: 30px;
+    padding: 10px 0;
+  }
+  .level-node {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+  .game-footer {
+    flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+  }
+  .footer-hint {
+    justify-content: center;
+  }
 }

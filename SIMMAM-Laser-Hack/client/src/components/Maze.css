@@ -17,8 +17,8 @@
     inset 0 0 20px rgba(0,0,0,0.5);
   cursor: default;
   max-width: 100%;
+  touch-action: none;
   /* Scale down on small screens */
-  image-rendering: crisp-edges;
 }
 
 /* Red flash when hitting a wall */

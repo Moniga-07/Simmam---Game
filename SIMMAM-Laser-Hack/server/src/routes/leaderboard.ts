@@ -21,7 +21,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     let query = supabase
       .from('runs')
       .select('player_name, register_number, house, total_seconds, score, created_at')
-      .order('total_seconds', { ascending: true })
+      .order('score', { ascending: false })
       .order('created_at', { ascending: true })
       .limit(topLimit);
 

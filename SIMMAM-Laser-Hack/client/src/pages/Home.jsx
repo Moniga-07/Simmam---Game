@@ -38,11 +38,6 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = (secs) => {
-    const m = String(Math.floor(secs / 60)).padStart(2, '0');
-    const s = String(secs % 60).padStart(2, '0');
-    return `${m}:${s}`;
-  };
 
   return (
     <div className="page home-page" id="home">
@@ -79,35 +74,36 @@ function Home() {
           >
             ▶ &nbsp;Launch Game
           </NeonButton>
-          <NeonButton
-            id="btn-leaderboard"
-            variant="secondary"
-            onClick={() => navigate('/leaderboard')}
-          >
-            🏆 &nbsp;Full Leaderboard
-          </NeonButton>
         </motion.div>
 
         {/* Live Mini Leaderboard */}
         <motion.div className="home-mini-lb" variants={itemVariants}>
-          <h3 style={{ color: '#00f5ff', fontFamily: 'Orbitron', marginBottom: '1rem', textShadow: '0 0 10px #00f5ff', textAlign: 'center' }}>LIVE LEADERBOARD</h3>
-          <div style={{ background: 'rgba(0,10,30,0.6)', border: '1px solid #00f5ff', borderRadius: '8px', padding: '1rem', minWidth: '300px' }}>
+          <h3 style={{ color: '#00f5ff', fontFamily: 'Orbitron', marginBottom: '1rem', textShadow: '0 0 10px #00f5ff', textAlign: 'center' }}>🏆 LIVE LEADERBOARD</h3>
+          <div style={{ background: 'rgba(0,10,30,0.6)', border: '1px solid #00f5ff', borderRadius: '8px', padding: '1rem', minWidth: '320px' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontFamily: 'Orbitron', fontSize: '0.7rem', color: '#7ab8d4', borderBottom: '1px solid rgba(0,245,255,0.2)', paddingBottom: '0.5rem' }}>
+              <span style={{ width: '30px' }}>RANK</span>
+              <span style={{ flex: 1 }}>PLAYER</span>
+              <span>SCORE</span>
+            </div>
             {topPlayers.length === 0 ? (
-              <div style={{ color: '#7ab8d4', textAlign: 'center', fontFamily: 'Orbitron' }}>Awaiting data...</div>
+              <div style={{ color: '#7ab8d4', textAlign: 'center', fontFamily: 'Orbitron', padding: '0.5rem' }}>Awaiting players...</div>
             ) : (
               <AnimatePresence>
                 {topPlayers.map((p, i) => (
-                  <motion.div 
+                  <motion.div
                     key={p.registerNumber}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontFamily: 'Orbitron', fontSize: '0.9rem' }}
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', fontFamily: 'Orbitron', fontSize: '0.85rem' }}
                   >
-                    <span style={{ color: i === 0 ? '#ffd700' : i === 1 ? '#e6e8fa' : i === 2 ? '#cd7f32' : '#00f5ff', width: '30px' }}>#{p.rank}</span>
-                    <span style={{ color: '#fff', flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{p.playerName}</span>
-                    <span style={{ color: '#00ff88', marginLeft: '10px' }}>{formatTime(p.totalSeconds)}</span>
+                    <span style={{ color: i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#00f5ff', width: '30px', fontWeight: 'bold' }}>
+                      {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${p.rank}`}
+                    </span>
+                    <span style={{ color: '#fff', flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>{p.playerName}</span>
+                    <span style={{ color: '#00f5ff', fontWeight: 'bold' }}>{(p.score ?? 0).toLocaleString()}</span>
                   </motion.div>
                 ))}
               </AnimatePresence>

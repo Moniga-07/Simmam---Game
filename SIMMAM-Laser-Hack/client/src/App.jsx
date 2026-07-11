@@ -1,24 +1,20 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-import Registration from './pages/Registration';
-import Home        from './pages/Home';
-import Instructions from './pages/Instructions';
-import Countdown   from './pages/Countdown';
-import Game        from './pages/Game';
-import Result      from './pages/Result';
+import Registration  from './pages/Registration';
+import Home          from './pages/Home';
+import Leaderboard   from './pages/Leaderboard';
+import SpaceSurvivor from './pages/SpaceSurvivor';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="scanline" aria-hidden="true" />
       <Routes>
-        <Route path="/"            element={<Registration />} />
-        <Route path="/home"        element={<Home />} />
-        <Route path="/instructions" element={<Instructions />} />
-        <Route path="/countdown"   element={<Countdown />} />
-        <Route path="/game"        element={<Game />} />
-        <Route path="/result"      element={<Result />} />
+        <Route path="/"             element={<Home />} />
+        <Route path="/registration" element={<Registration />} />
+        <Route path="/game"         element={<SpaceSurvivor />} />
+        <Route path="/leaderboard"  element={<Leaderboard />} />
       </Routes>
     </BrowserRouter>
   );

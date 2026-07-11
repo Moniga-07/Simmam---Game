@@ -1,6 +1,20 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
 import './Home.css';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 
 function Home() {
   const navigate = useNavigate();
@@ -11,54 +25,64 @@ function Home() {
       <div className="laser-beam beam-h" aria-hidden="true" />
       <div className="laser-beam beam-v" aria-hidden="true" />
 
-      <div className="home-content">
+      <motion.div
+        className="home-content"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Title */}
-        <h1 className="neon-title home-title">
+        <motion.h1 className="neon-title home-title" variants={itemVariants}>
           <span className="title-line1">SIMMAM</span>
           <span className="title-line2">LASER<span className="title-accent"> HACK</span></span>
-        </h1>
+        </motion.h1>
 
         {/* Subtitle */}
-        <p className="home-description">
+        <motion.p className="home-description" variants={itemVariants}>
           Guide the laser safely through <span className="hl">three increasingly difficult</span> randomized maze levels
           without touching the walls. Only the fastest survive.
-        </p>
+        </motion.p>
 
-        <div className="neon-divider" />
+        <motion.div className="neon-divider" variants={itemVariants} />
 
         {/* Stats row */}
-        <div className="home-stats">
+        <motion.div className="home-stats" variants={itemVariants}>
           <div className="stat-item">
             <span className="stat-value">3</span>
             <span className="stat-label">Levels</span>
           </div>
           <div className="stat-sep" />
           <div className="stat-item">
+            <span className="stat-value">6</span>
+            <span className="stat-label">Houses</span>
+          </div>
+          <div className="stat-sep" />
+          <div className="stat-item">
             <span className="stat-value">1</span>
             <span className="stat-label">Winner</span>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="neon-divider" />
+        <motion.div className="neon-divider" variants={itemVariants} />
 
         {/* Action buttons */}
-        <div className="home-actions">
+        <motion.div className="home-actions" variants={itemVariants}>
           <NeonButton
             id="btn-start"
             variant="primary"
-            onClick={() => navigate('/instructions')}
+            onClick={() => navigate('/registration')}
           >
-            ▶ &nbsp;Start Game
+            ▶ &nbsp;Launch Game
           </NeonButton>
           <NeonButton
             id="btn-leaderboard"
             variant="secondary"
-            onClick={() => navigate('/result')}
+            onClick={() => navigate('/leaderboard')}
           >
             🏆 &nbsp;Leaderboard
           </NeonButton>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Corner accent lines */}
       <div className="home-corner top-left"   aria-hidden="true" />

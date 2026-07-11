@@ -113,6 +113,47 @@
   padding: 10px;
 }
 
+/* House selection grid */
+.house-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.house-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.4rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  background: rgba(255,255,255,0.03);
+}
+
+.house-option input[type="radio"] {
+  display: none;
+}
+
+.house-option:hover {
+  border-color: var(--house-color, var(--neon-cyan));
+  color: var(--house-color, var(--neon-cyan));
+  background: rgba(255,255,255,0.06);
+}
+
+.house-option.selected {
+  border-color: var(--house-color, var(--neon-cyan));
+  color: var(--house-color, var(--neon-cyan));
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--house-color, var(--neon-cyan)) 40%, transparent);
+}
+
 .reg-actions {
   margin-top: 1rem;
   width: 100%;

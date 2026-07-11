@@ -14,6 +14,7 @@ const allowedOrigins = [
   process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   // Railway frontend URL (set in Railway env vars)
   process.env.RAILWAY_FRONTEND_URL || '',
+  'https://game.ssesimmam.com'
 ].filter(Boolean);
 
 app.use(

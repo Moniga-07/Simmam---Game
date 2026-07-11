@@ -162,3 +162,22 @@
 #btn-submit-reg {
   width: 100%;
 }
+
+/* ─── Mobile Responsiveness ─── */
+@media (max-width: 480px) {
+  .reg-card {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+  .reg-title {
+    font-size: 2rem;
+  }
+  .reg-subtitle {
+    font-size: 0.75rem;
+  }
+  .house-option {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.6rem;
+  }
+}

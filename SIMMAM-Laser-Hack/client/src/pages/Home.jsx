@@ -86,28 +86,29 @@ function Home() {
               <span style={{ flex: 1 }}>PLAYER</span>
               <span>SCORE</span>
             </div>
-            {topPlayers.length === 0 ? (
-              <div style={{ color: '#7ab8d4', textAlign: 'center', fontFamily: 'Orbitron', padding: '0.5rem' }}>Awaiting players...</div>
-            ) : (
-              <AnimatePresence>
-                {topPlayers.map((p, i) => (
-                  <motion.div
-                    key={p.registerNumber}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', fontFamily: 'Orbitron', fontSize: '0.85rem' }}
-                  >
-                    <span style={{ color: i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#00f5ff', width: '30px', fontWeight: 'bold' }}>
-                      {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${p.rank}`}
-                    </span>
-                    <span style={{ color: '#fff', flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>{p.playerName}</span>
-                    <span style={{ color: '#00f5ff', fontWeight: 'bold' }}>{(p.score ?? 0).toLocaleString()}</span>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            )}
+            {/* Always show 5 rows — empty slots show dashes */}
+            {Array.from({ length: 5 }, (_, i) => {
+              const p = topPlayers[i];
+              const medalColor = i === 0 ? '#ffd700' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#00f5ff';
+              const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+              return (
+                <motion.div
+                  key={p ? p.registerNumber : `empty-${i}`}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', fontFamily: 'Orbitron', fontSize: '0.85rem', opacity: p ? 1 : 0.35 }}
+                >
+                  <span style={{ color: medalColor, width: '30px', fontWeight: 'bold' }}>{medal}</span>
+                  <span style={{ color: p ? '#fff' : '#7ab8d4', flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>
+                    {p ? p.playerName : '— — —'}
+                  </span>
+                  <span style={{ color: '#00f5ff', fontWeight: 'bold' }}>
+                    {p ? (p.score ?? 0).toLocaleString() : '—'}
+                  </span>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </motion.div>

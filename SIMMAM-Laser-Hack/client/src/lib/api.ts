@@ -14,6 +14,8 @@ export interface EndGameResponse {
   success: boolean;
   totalSeconds: number;
   survivalTimeMs: number;
+  highScore: number;
+  isNewRecord: boolean;
 }
 
 export interface LeaderboardEntry {

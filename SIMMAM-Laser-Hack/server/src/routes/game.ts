@@ -206,7 +206,7 @@ router.post(
         if (lbError) throw lbError;
       }
 
-      res.json({ success: true, totalSeconds, survivalTimeMs });
+      res.json({ success: true, totalSeconds, survivalTimeMs, highScore, isNewRecord });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Unknown error';
       console.error('Error ending game session:', message);

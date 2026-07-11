@@ -423,10 +423,11 @@ function formatTime(s) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function SpaceSurvivor() {
   const navigate = useNavigate();
-  const canvasRef  = useRef(null);
-  const stateRef   = useRef(null);  // mutable game state
-  const animRef    = useRef(null);
-  const lastTimeRef = useRef(null);
+  const canvasRef    = useRef(null);
+  const stateRef     = useRef(null);  // mutable game state
+  const animRef      = useRef(null);
+  const lastTimeRef  = useRef(null);
+  const gameEndedRef = useRef(false); // prevents endSession being called multiple times
 
   const { startSession, endSession, error: sessionError, starting } = useGameSession();
 
@@ -435,7 +436,7 @@ export default function SpaceSurvivor() {
   const [uiScore, setUiScore]     = useState(0);
   const [uiHp, setUiHp]           = useState(PLAYER.maxHP);
   const [uiTime, setUiTime]       = useState(0);
-  const [highScore, setHighScore] = useState(() => parseInt(localStorage.getItem('ss_hs') || '0'));
+  const [highScore, setHighScore] = useState(0); // updated from server response, not localStorage
   const [isMobile, setIsMobile]   = useState(false);
 
   // Mobile joystick refs
@@ -834,18 +835,28 @@ export default function SpaceSurvivor() {
       animRef.current = requestAnimationFrame(loop);
     } else {
       render();
-      // Trigger game-over UI
-      const finalScore = gs.score;
-      if (finalScore > parseInt(localStorage.getItem('ss_hs') || '0')) {
-        localStorage.setItem('ss_hs', String(finalScore));
-        setHighScore(finalScore);
-      }
-      setUiScore(finalScore);
-      setUiTime(gs.survivalTime);
-      setPhase('dead');
 
-      // Save to backend
-      endSession(true, finalScore);
+      // Only trigger once — game loop keeps calling after death
+      if (!gameEndedRef.current) {
+        gameEndedRef.current = true;
+
+        const finalScore = gs.score;
+        setUiScore(finalScore);
+        setUiTime(gs.survivalTime);
+        setPhase('dead');
+
+        // Save to backend — endSession reads sessionId from a ref so the
+        // stale closure here is NOT a problem anymore.
+        endSession(true, finalScore).then((result) => {
+          if (result) {
+            // Use the server-computed high score
+            setHighScore(result.highScore);
+          } else {
+            // Fallback: use the score just achieved
+            setHighScore(finalScore);
+          }
+        });
+      }
     }
   }, [update, render, endSession]);
 
@@ -862,6 +873,7 @@ export default function SpaceSurvivor() {
     const res = await startSession(playerData);
     if (!res) return; // Error handled by sessionError
 
+    gameEndedRef.current = false; // reset guard for new game
     lastTimeRef.current = null;
     initGame();
     setPhase('playing');

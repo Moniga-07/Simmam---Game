@@ -6,12 +6,12 @@ import { api } from '../lib/api';
 import './Registration.css';
 
 const HOUSES = [
-  { value: 'agniyas',  label: 'Agniyas',  color: '#ff6b35' },
-  { value: 'dronas',   label: 'Dronas',   color: '#00f5ff' },
-  { value: 'marutas',  label: 'Marutas',  color: '#7b2fff' },
-  { value: 'rudras',   label: 'Rudras',   color: '#ff003c' },
-  { value: 'suryas',   label: 'Suryas',   color: '#ffd700' },
-  { value: 'vajras',   label: 'Vajras',   color: '#00ff88' },
+  { value: 'agniyas', label: 'Agniyas', color: '#ff6b35' },
+  { value: 'dronas', label: 'Dronas', color: '#00f5ff' },
+  { value: 'marutas', label: 'Marutas', color: '#7b2fff' },
+  { value: 'rudras', label: 'Rudras', color: '#ff003c' },
+  { value: 'suryas', label: 'Suryas', color: '#ffd700' },
+  { value: 'vajras', label: 'Vajras', color: '#00ff88' },
 ];
 
 function Registration() {
@@ -113,9 +113,9 @@ function Registration() {
 
         <form onSubmit={handleSubmit} className="reg-form">
           {[
-            { label: 'Agent Name', id: 'name', placeholder: 'Moniga', type: 'text' },
+            { label: 'Name', id: 'name', placeholder: 'Name', type: 'text' },
             { label: 'Register Number', id: 'registerNumber', placeholder: '192521***', type: 'text' },
-            { label: 'Saveetha Mail-ID', id: 'email', placeholder: '192521184.simats@saveetha.com', type: 'email' },
+            { label: 'Saveetha Mail-ID', id: 'email', placeholder: '192521***.simats@saveetha.com', type: 'email' },
           ].map((field, i) => (
             <motion.div
               key={field.id}

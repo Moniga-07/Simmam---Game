@@ -34,34 +34,14 @@ function Home() {
         {/* Title */}
         <motion.h1 className="neon-title home-title" variants={itemVariants}>
           <span className="title-line1">SIMMAM</span>
-          <span className="title-line2">LASER<span className="title-accent"> HACK</span></span>
+          <span className="title-line2">SPACE<span className="title-accent"> SURVIVOR</span></span>
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p className="home-description" variants={itemVariants}>
-          Guide the laser safely through <span className="hl">three increasingly difficult</span> randomized maze levels
-          without touching the walls. Only the fastest survive.
+          Your ship is caught in an asteroid field.<br/>
+          Survive. Destroy. Collect.
         </motion.p>
-
-        <motion.div className="neon-divider" variants={itemVariants} />
-
-        {/* Stats row */}
-        <motion.div className="home-stats" variants={itemVariants}>
-          <div className="stat-item">
-            <span className="stat-value">3</span>
-            <span className="stat-label">Levels</span>
-          </div>
-          <div className="stat-sep" />
-          <div className="stat-item">
-            <span className="stat-value">6</span>
-            <span className="stat-label">Houses</span>
-          </div>
-          <div className="stat-sep" />
-          <div className="stat-item">
-            <span className="stat-value">1</span>
-            <span className="stat-label">Winner</span>
-          </div>
-        </motion.div>
 
         <motion.div className="neon-divider" variants={itemVariants} />
 

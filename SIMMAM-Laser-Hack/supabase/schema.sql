@@ -18,6 +18,9 @@ CREATE TABLE IF NOT EXISTS public.game_sessions (
   start_time       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   end_time         TIMESTAMPTZ,
   survival_time_ms INTEGER,                        -- computed server-side
+  score            INTEGER,                        -- score at the end of the session
+  high_score       INTEGER,                        -- the player's high score after this session
+  is_new_record    BOOLEAN     NOT NULL DEFAULT FALSE,
   completed        BOOLEAN     NOT NULL DEFAULT FALSE,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

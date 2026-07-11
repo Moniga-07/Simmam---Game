@@ -152,12 +152,36 @@ router.post(
       const survivalTimeMs = endTime.getTime() - startTime.getTime();
       const totalSeconds = Math.floor(survivalTimeMs / 1000);
 
+      let highScore = score || 0;
+      let isNewRecord = false;
+      
+      if (completed) {
+        // Fetch current high score
+        const { data: previousRuns } = await supabase
+          .from('runs')
+          .select('score')
+          .eq('register_number', session.register_number)
+          .order('score', { ascending: false })
+          .limit(1);
+          
+        const previousHighScore = previousRuns && previousRuns.length > 0 ? previousRuns[0].score : 0;
+        
+        if (highScore > previousHighScore) {
+          isNewRecord = true;
+        } else {
+          highScore = previousHighScore;
+        }
+      }
+
       // Update the session
       const { error: updateError } = await supabase
         .from('game_sessions')
         .update({
           end_time: endTime.toISOString(),
           survival_time_ms: survivalTimeMs,
+          score: score || 0,
+          high_score: highScore,
+          is_new_record: isNewRecord,
           completed,
         })
         .eq('id', sessionId);

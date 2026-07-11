@@ -45,6 +45,13 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  /** Pre-check if a user has already played before going to the game screen */
+  checkEligibility: (payload: { registerNumber: string; email: string }) =>
+    request<{ success: boolean; eligible: boolean }>('/api/game/check', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
   /** Call when the player clicks "GO" — server records UTC start_time */
   startGame: (payload: { playerName: string; registerNumber: string; email: string; house: string }) =>
     request<StartGameResponse>('/api/game/start', {

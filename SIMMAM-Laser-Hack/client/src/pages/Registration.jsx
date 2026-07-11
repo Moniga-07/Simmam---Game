@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
+import { api } from '../lib/api';
 import './Registration.css';
 
 const HOUSES = [
@@ -22,23 +23,46 @@ function Registration() {
     email: '',
     house: 'agniyas',
   });
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.registerNumber.trim() || !formData.email.trim()) return;
+    setErrorMsg('');
+    if (!formData.name.trim() || !formData.registerNumber.trim() || !formData.email.trim()) {
+      setErrorMsg('All fields are mandatory.');
+      return;
+    }
 
-    sessionStorage.setItem('playerData', JSON.stringify({
-      playerName: formData.name.trim(),
-      registerNumber: formData.registerNumber.trim(),
-      email: formData.email.trim(),
-      house: formData.house,
-    }));
+    if (!formData.email.trim().toLowerCase().endsWith('@saveetha.com')) {
+      setErrorMsg('Only @saveetha.com email addresses are allowed.');
+      return;
+    }
 
-    navigate('/game');
+    setIsLoading(true);
+    try {
+      await api.checkEligibility({
+        registerNumber: formData.registerNumber.trim(),
+        email: formData.email.trim(),
+      });
+
+      sessionStorage.setItem('playerData', JSON.stringify({
+        playerName: formData.name.trim(),
+        registerNumber: formData.registerNumber.trim(),
+        email: formData.email.trim(),
+        house: formData.house,
+      }));
+
+      navigate('/game');
+    } catch (err) {
+      setErrorMsg(err.message || 'Error connecting to server.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const cardVariants = {
@@ -110,6 +134,8 @@ function Registration() {
                 value={formData[field.id]}
                 onChange={handleChange}
                 required
+                pattern={field.id === 'email' ? '.*@saveetha\\.com$' : undefined}
+                title={field.id === 'email' ? 'Must be a @saveetha.com email address' : undefined}
                 autoComplete="off"
               />
             </motion.div>
@@ -143,14 +169,24 @@ function Registration() {
             </div>
           </motion.div>
 
+          {errorMsg && (
+            <motion.div
+              style={{ color: '#ff003c', textAlign: 'center', marginTop: '10px', textShadow: '0 0 5px #ff003c' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {errorMsg}
+            </motion.div>
+          )}
+
           <motion.div
             className="reg-actions"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <NeonButton id="btn-submit-reg" variant="primary" type="submit">
-              Initialize Run ▶
+            <NeonButton id="btn-submit-reg" variant="primary" type="submit" disabled={isLoading}>
+              {isLoading ? 'INITIALIZING...' : 'Initialize Run ▶'}
             </NeonButton>
           </motion.div>
         </form>

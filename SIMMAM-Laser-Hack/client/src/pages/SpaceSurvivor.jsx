@@ -17,10 +17,11 @@ const V = {
   clamp:     (v, mn, mx) => Math.min(Math.max(v, mn), mx),
   rand:      (mn, mx) => mn + Math.random() * (mx - mn),
   randInt:   (mn, mx) => Math.floor(mn + Math.random() * (mx - mn + 1)),
+  lerp:      (a, b, t) => a + (b - a) * t,
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const PLAYER = { radius: 15, speed: 230, maxHP: 5, invincibleTime: 1.5, fireRate: 0.15 };
+const PLAYER = { radius: 15, speed: 230, maxHP: 3, invincibleTime: 1.5, fireRate: 0.15 };
 const BULLET  = { radius: 4, speed: 540, lifetime: 1.7 };
 const ENEMY_BULLET = { radius: 3.5, speed: 240, lifetime: 2.2 };
 
@@ -463,7 +464,7 @@ export default function SpaceSurvivor() {
       survivalTime: 0,
       bonusTimer: 0,
       asteroidTimer: 0,
-      asteroidInterval: 2.4,
+      asteroidInterval: 1.2,
       crystalTimer: 0,
       crystalInterval: 5.5,
       droneTimer: 0,
@@ -479,8 +480,8 @@ export default function SpaceSurvivor() {
     };
 
     // Spawn initial asteroids
-    for (let i = 0; i < 4; i++) {
-      stateRef.current.asteroids.push(spawnAsteroid(W, H, i < 2 ? 'large' : 'medium'));
+    for (let i = 0; i < 8; i++) {
+      stateRef.current.asteroids.push(spawnAsteroid(W, H, i < 3 ? 'large' : 'medium'));
     }
   }, []);
 
@@ -511,7 +512,7 @@ export default function SpaceSurvivor() {
 
     // ── Wave escalation ────────────────────────────────────────────────────
     gs.wave = 1 + Math.floor(gs.survivalTime / 40);
-    gs.asteroidInterval = Math.max(0.8, 2.4 - gs.wave * 0.18);
+    gs.asteroidInterval = Math.max(0.4, 1.2 - gs.wave * 0.15);
 
     // ── Player input (keyboard) ────────────────────────────────────────────
     let mvx = 0, mvy = 0;
@@ -1096,9 +1097,7 @@ export default function SpaceSurvivor() {
             )}
 
             <div className="ss-divider" />
-            <button className="ss-btn ss-btn-primary" onClick={startGame}>
-              🔄 Retry Mission
-            </button>
+
             <button className="ss-btn ss-btn-secondary" onClick={() => navigate('/')}>
               ← Back to Home
             </button>

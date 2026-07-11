@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
+import { api } from '../lib/api';
 import './Home.css';
 
 const containerVariants = {
@@ -18,6 +20,29 @@ const itemVariants = {
 
 function Home() {
   const navigate = useNavigate();
+  const [topPlayers, setTopPlayers] = useState([]);
+
+  useEffect(() => {
+    const fetchLB = () => {
+      api.getLeaderboard({ limit: 5 })
+        .then(data => {
+          if (data && data.leaderboard) {
+            setTopPlayers(data.leaderboard);
+          }
+        })
+        .catch(console.error);
+    };
+    
+    fetchLB(); // Initial fetch
+    const interval = setInterval(fetchLB, 5000); // Live poll every 5s
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatTime = (secs) => {
+    const m = String(Math.floor(secs / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    return `${m}:${s}`;
+  };
 
   return (
     <div className="page home-page" id="home">
@@ -59,8 +84,35 @@ function Home() {
             variant="secondary"
             onClick={() => navigate('/leaderboard')}
           >
-            🏆 &nbsp;Leaderboard
+            🏆 &nbsp;Full Leaderboard
           </NeonButton>
+        </motion.div>
+
+        {/* Live Mini Leaderboard */}
+        <motion.div className="home-mini-lb" variants={itemVariants}>
+          <h3 style={{ color: '#00f5ff', fontFamily: 'Orbitron', marginBottom: '1rem', textShadow: '0 0 10px #00f5ff', textAlign: 'center' }}>LIVE LEADERBOARD</h3>
+          <div style={{ background: 'rgba(0,10,30,0.6)', border: '1px solid #00f5ff', borderRadius: '8px', padding: '1rem', minWidth: '300px' }}>
+            {topPlayers.length === 0 ? (
+              <div style={{ color: '#7ab8d4', textAlign: 'center', fontFamily: 'Orbitron' }}>Awaiting data...</div>
+            ) : (
+              <AnimatePresence>
+                {topPlayers.map((p, i) => (
+                  <motion.div 
+                    key={p.registerNumber}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontFamily: 'Orbitron', fontSize: '0.9rem' }}
+                  >
+                    <span style={{ color: i === 0 ? '#ffd700' : i === 1 ? '#e6e8fa' : i === 2 ? '#cd7f32' : '#00f5ff', width: '30px' }}>#{p.rank}</span>
+                    <span style={{ color: '#fff', flex: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{p.playerName}</span>
+                    <span style={{ color: '#00ff88', marginLeft: '10px' }}>{formatTime(p.totalSeconds)}</span>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            )}
+          </div>
         </motion.div>
       </motion.div>
 

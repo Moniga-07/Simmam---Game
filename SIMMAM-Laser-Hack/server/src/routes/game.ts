@@ -154,6 +154,7 @@ router.post(
 
       let highScore = score || 0;
       let isNewRecord = false;
+      let isFirstTime = false;
       
       if (completed) {
         // Fetch current high score
@@ -164,7 +165,8 @@ router.post(
           .order('score', { ascending: false })
           .limit(1);
           
-        const previousHighScore = previousRuns && previousRuns.length > 0 ? previousRuns[0].score : 0;
+        isFirstTime = !previousRuns || previousRuns.length === 0;
+        const previousHighScore = isFirstTime ? -1 : (previousRuns?.[0]?.score ?? -1);
         
         if (highScore > previousHighScore) {
           isNewRecord = true;
@@ -181,16 +183,16 @@ router.post(
           survival_time_ms: survivalTimeMs,
           score: score || 0,
           high_score: highScore,
-          is_new_record: isNewRecord,
+          is_new_record: isNewRecord && !isFirstTime,
           completed,
         })
         .eq('id', sessionId);
 
       if (updateError) throw updateError;
 
-      // Only save to leaderboard if the game was completed
-      if (completed) {
-        const { error: lbError } = await supabase.from('runs').insert([
+      // Only save to leaderboard if the game was completed AND it's a new record or first time
+      if (completed && (isNewRecord || isFirstTime)) {
+        const { error: lbError } = await supabase.from('runs').upsert([
           {
             player_name: session.player_name,
             register_number: session.register_number,
@@ -200,7 +202,7 @@ router.post(
             score: score || 0,
             session_id: sessionId,
           },
-        ]);
+        ], { onConflict: 'register_number' });
         if (lbError) throw lbError;
       }
 

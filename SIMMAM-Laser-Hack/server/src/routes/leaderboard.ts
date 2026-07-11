@@ -20,7 +20,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     // Build leaderboard query
     let query = supabase
       .from('runs')
-      .select('player_name, register_number, house, total_seconds, created_at')
+      .select('player_name, register_number, house, total_seconds, score, created_at')
       .order('total_seconds', { ascending: true })
       .order('created_at', { ascending: true })
       .limit(topLimit);
@@ -39,6 +39,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
       registerNumber: row.register_number,
       house: row.house,
       totalSeconds: row.total_seconds,
+      score: row.score,
       completedAt: row.created_at,
     }));
 

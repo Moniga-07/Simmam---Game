@@ -1061,7 +1061,7 @@ export default function SpaceSurvivor() {
             <button className="ss-btn ss-btn-primary" onClick={startGame} disabled={starting}>
               {starting ? '🚀 INITIALIZING...' : '🚀 LAUNCH MISSION'}
             </button>
-            <button className="ss-btn ss-btn-secondary" onClick={() => navigate('/home')}>
+            <button className="ss-btn ss-btn-secondary" onClick={() => navigate('/')}>
               ← Back to Home
             </button>
           </div>
@@ -1099,7 +1099,7 @@ export default function SpaceSurvivor() {
             <button className="ss-btn ss-btn-primary" onClick={startGame}>
               🔄 Retry Mission
             </button>
-            <button className="ss-btn ss-btn-secondary" onClick={() => navigate('/home')}>
+            <button className="ss-btn ss-btn-secondary" onClick={() => navigate('/')}>
               ← Back to Home
             </button>
           </div>

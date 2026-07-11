@@ -64,7 +64,7 @@ function Leaderboard() {
       >
         {/* Header */}
         <div className="lb-header">
-          <NeonButton id="btn-lb-back" size="sm" variant="secondary" onClick={() => navigate('/home')}>
+          <NeonButton id="btn-lb-back" size="sm" variant="secondary" onClick={() => navigate('/')}>
             ← Back
           </NeonButton>
           <div>
